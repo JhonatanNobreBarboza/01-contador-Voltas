@@ -1,3 +1,5 @@
+![Contador de Voltas](https://github.com/JhonatanNobreBarboza/01-contador-Voltas/blob/master/contador.PNG)</br>
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
