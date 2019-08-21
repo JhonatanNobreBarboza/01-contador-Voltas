@@ -1,51 +1,59 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
+import './style.css'
+import MostraVoltas from './MostraVoltas'
+import MostraTempo from './MostraTempo'
+import Button from './Button'
 
-const MostraVoltas = (props) => {
-  return (
-    <p>
-      {props.voltas} <br />
-      Voltas
-     </p>
-  )
-}
-
-const MostraTempo = (props) => {
-  return (
-    <p>{props.tempo}<br />
-      Tempo médio por volta
-    </p>
-  )
-}
-
-const Button = (props) => <button onClick={props.onClick}>{props.text}</button>
 
 function App() {
-  const [numVoltas, setNumVoltas] = useState(14)
+  const [numVoltas, setNumVoltas] = useState(1)
+  const [running, setRunning] = useState(false)
   const [tempo, setTempo] = useState(0)
 
   useEffect(() => {
-    setInterval(() => {
-      console.log('chamou!')
-    }, 1000)
-  }, [])
-  
+    let timer = null
+    if (running) {
+      timer = setInterval(() => {
+        setTempo(old => old + 1)
+      }, 1000)
+    }
+    return () => {
+      if (timer) {
+        clearInterval(timer)
+      }
+    }
+  }, [running])
 
+
+  const toggleRunning = () => {
+    setRunning(!running)
+  }
 
   const inclement = () => {
     setNumVoltas(numVoltas + 1)
   }
 
   const declement = () => {
+    if(numVoltas > 0){
     setNumVoltas(numVoltas - 1)
+    }
+  }
+  const reset = () => {
+    setNumVoltas(0)
+    setTempo(0)
   }
   return (
     <div>
+      <p className='titulo'>Contador de Voltas</p>
       <MostraVoltas voltas={numVoltas} />
-      <Button text='+' onClick={inclement} />
-      <Button text='-' onClick={declement} />
-      <MostraTempo tempo={tempo} />
-      <Button text='Iniciar' />
-      <Button text='Reiniciar' />
+      <Button text='+' className='bigger' onClick={inclement} />
+      <Button text='-' className='bigger' onClick={declement} />
+      {
+        numVoltas > 0 &&
+      <MostraTempo tempo={Math.round(tempo/numVoltas)} />
+      }
+      <Button onClick={toggleRunning} text={running ? 'Pausar' : 'Iniciar'} />
+      <Button onClick={reset} text='Reiniciar' />
     </div>
   )
 }
